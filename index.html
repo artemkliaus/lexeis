@@ -1,0 +1,864 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Λέξεις: греческие слова</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=GFS+Didot&family=Commissioner:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#EDF1EF; --surface:#FFFFFF; --surface-2:#E1E8E5; --ink:#14233A; --ink-soft:#526070;
+  --line:#CCD6D3; --sea:#1D5899; --sea-ink:#FFFFFF; --olive:#5A6A27; --amber:#966600;
+  --error:#B2423A; --ok:#3A7535; --focus:#E0B22E;
+  --serif:'GFS Didot','Noto Serif',Georgia,'Times New Roman',serif;
+  --sans:'Commissioner',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+  color-scheme:light;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#0E1928; --surface:#162438; --surface-2:#1F3048; --ink:#E5EBEE; --ink-soft:#9DADBD;
+    --line:#2C3F58; --sea:#86B4EA; --sea-ink:#0E1928; --olive:#AFBE6E; --amber:#E7C35A;
+    --error:#EE8478; --ok:#8FCB84; --focus:#E7C35A; color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0E1928; --surface:#162438; --surface-2:#1F3048; --ink:#E5EBEE; --ink-soft:#9DADBD;
+  --line:#2C3F58; --sea:#86B4EA; --sea-ink:#0E1928; --olive:#AFBE6E; --amber:#E7C35A;
+  --error:#EE8478; --ok:#8FCB84; --focus:#E7C35A; color-scheme:dark;
+}
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0px);-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 1rem/1.55 var(--sans)}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--focus);outline-offset:2px}
+.gr{font-family:var(--serif);font-weight:400}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);border:0}
+[hidden]{display:none!important}
+
+/* header */
+.top-wrap{position:sticky;top:env(safe-area-inset-top,0px);z-index:10;background:var(--bg);border-bottom:1px solid var(--line)}
+.top{max-width:640px;margin:0 auto;padding:.85rem 1.25rem;display:flex;align-items:center;justify-content:space-between;gap:1rem}
+.brand{font-size:1.9rem;line-height:1;color:var(--sea)}
+.tabs{display:flex;gap:.25rem}
+.tabs button{background:none;border:0;color:var(--ink-soft);font-weight:500;padding:.5rem .8rem;border-radius:10px;cursor:pointer}
+.tabs button[aria-current="page"]{color:var(--ink);background:var(--surface-2)}
+
+main{max-width:640px;margin:0 auto;padding:1.25rem 1.25rem 3rem}
+.view-title{font-size:1.6rem;font-weight:600;margin:.25rem 0 1rem;line-height:1.2}
+h2{font-size:1.1rem;font-weight:600;margin:0 0 .5rem}
+
+/* home */
+.hero-gr{font-family:var(--serif);font-weight:400;font-size:clamp(3rem,13vw,4.75rem);line-height:1;margin:.5rem 0 .9rem;color:var(--sea)}
+.lead{font-size:1.25rem;line-height:1.45;margin:0 0 .5rem;max-width:36ch}
+.meta{color:var(--ink-soft);margin:0}
+.hint{color:var(--ink-soft);font-size:.9rem;margin:0}
+.setup{margin-top:2rem;display:grid;gap:1.4rem}
+.field{display:grid;gap:.4rem}
+.field>span,.label{font-size:.875rem;font-weight:500;color:var(--ink-soft)}
+input:not([type=checkbox]):not([type=file]),select,textarea{
+  width:100%;padding:.75rem .9rem;border-radius:10px;border:1px solid var(--line);background:var(--surface);min-height:46px}
+textarea{min-height:220px;resize:vertical;line-height:1.5}
+.seg{display:grid;grid-template-columns:repeat(4,1fr);gap:.3rem;background:var(--surface-2);padding:.3rem;border-radius:14px}
+.seg.three{grid-template-columns:repeat(3,1fr)}
+.seg button{border:0;background:transparent;color:var(--ink-soft);font-size:.92rem;font-weight:500;padding:.55rem .4rem;border-radius:10px;cursor:pointer;min-height:44px}
+.seg button[aria-pressed="true"]{background:var(--surface);color:var(--ink);box-shadow:0 1px 0 var(--line)}
+.actions{display:flex;flex-wrap:wrap;gap:.6rem}
+.btn{font-weight:600;padding:.75rem 1.1rem;border-radius:12px;border:1px solid var(--line);background:var(--surface);cursor:pointer;min-height:46px;display:inline-flex;align-items:center;justify-content:center;text-align:center}
+.btn.primary{background:var(--sea);border-color:var(--sea);color:var(--sea-ink)}
+.btn.big{padding:1rem 1.5rem;font-size:1.05rem;flex:1 1 auto}
+.btn.ghost{background:transparent;border-color:transparent;color:var(--ink-soft)}
+.btn.danger{color:var(--error);border-color:color-mix(in srgb,var(--error) 45%,var(--line))}
+.btn[disabled]{opacity:.45;cursor:not-allowed}
+.btn.armed{background:var(--error);border-color:var(--error);color:var(--surface)}
+.empty{padding-top:1rem}
+.empty p{max-width:38ch}
+
+/* session */
+.session-top{display:flex;align-items:center;gap:.9rem;margin:0 0 1rem}
+.link{background:none;border:0;color:var(--ink-soft);font-weight:500;padding:.5rem 0;cursor:pointer}
+.progress{flex:1;height:6px;background:var(--surface-2);border-radius:99px;overflow:hidden}
+.progress span{display:block;height:100%;background:var(--olive);transition:width .3s ease}
+.left{font-variant-numeric:tabular-nums;color:var(--ink-soft);font-size:.9rem;min-width:2ch;text-align:right}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:22px;padding:2.75rem 1.4rem 2rem;min-height:clamp(270px,44vh,400px);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:.6rem;position:relative}
+.card.clickable{cursor:pointer}
+.prompt{position:absolute;top:1rem;left:1.25rem;right:1.25rem;display:flex;justify-content:space-between;font-size:.85rem;color:var(--ink-soft)}
+.prompt .practice{color:var(--olive);font-weight:500}
+.word{font-family:var(--serif);font-size:clamp(2.6rem,11vw,4.25rem);line-height:1.12;overflow-wrap:anywhere;color:var(--ink)}
+.word-ru{font-size:clamp(1.6rem,6.5vw,2.35rem);font-weight:500;line-height:1.25;overflow-wrap:anywhere}
+.answer{border-top:1px solid var(--line);padding-top:1.1rem;margin-top:.6rem;width:100%;display:grid;gap:.5rem;justify-items:center;animation:rise .22s ease-out}
+.note{color:var(--ink-soft);margin:0;max-width:40ch}
+.speak{width:44px;height:44px;border-radius:50%;border:1px solid var(--line);background:var(--bg);color:var(--sea);display:inline-grid;place-items:center;cursor:pointer}
+.controls{margin-top:1rem;display:grid;gap:.6rem}
+.keys{text-align:center;font-size:.85rem;color:var(--ink-soft);margin:0}
+.rate{display:grid;grid-template-columns:repeat(4,1fr);gap:.5rem}
+.rate button{--c:var(--sea);border:1px solid color-mix(in srgb,var(--c) 40%,var(--line));background:color-mix(in srgb,var(--c) 9%,var(--surface));border-radius:14px;padding:.7rem .2rem;display:grid;gap:.1rem;justify-items:center;cursor:pointer;min-height:64px}
+.rate b{font-weight:600;font-size:.92rem;color:var(--c)}
+.rate small{font-size:.8rem;color:var(--ink-soft);font-variant-numeric:tabular-nums}
+.r0{--c:var(--error)!important}.r1{--c:var(--amber)!important}.r2{--c:var(--sea)!important}.r3{--c:var(--olive)!important}
+.type-row{display:flex;gap:.5rem}
+.type-row input{font-family:var(--serif);font-size:1.45rem!important;text-align:center}
+.verdict{font-weight:600;margin:0}
+.verdict.ok{color:var(--ok)}.verdict.near{color:var(--amber)}.verdict.wrong{color:var(--error)}
+.yours{color:var(--ink-soft);margin:0;font-family:var(--serif);font-size:1.2rem}
+.yours.struck{text-decoration:line-through}
+
+/* words */
+.filters{display:grid;grid-template-columns:1fr auto;gap:.5rem}
+.filters select{width:auto;max-width:12rem}
+.wlist{display:grid;gap:.4rem;margin-top:.9rem}
+.wrow{background:var(--surface);border:1px solid var(--line);border-radius:14px}
+.wmain{display:grid;grid-template-columns:1fr auto;gap:0 1rem;width:100%;padding:.75rem 1rem;background:none;border:0;border-radius:14px;cursor:pointer;text-align:left}
+.wgr{font-family:var(--serif);font-size:1.3rem;line-height:1.3;overflow-wrap:anywhere}
+.wru{color:var(--ink-soft);grid-column:1;overflow-wrap:anywhere}
+.wst{grid-row:1/span 2;grid-column:2;align-self:center;font-size:.82rem;color:var(--ink-soft);text-align:right;white-space:nowrap}
+.wst.new{color:var(--sea)}.wst.due{color:var(--amber)}
+.edit{padding:.25rem 1rem 1rem;display:grid;gap:.75rem}
+
+/* add */
+.row2{display:grid;grid-template-columns:1fr auto;gap:.6rem;align-items:end}
+.file{position:relative}
+.file:focus-within{outline:3px solid var(--focus);outline-offset:2px}
+.preview{margin:1rem 0;display:grid;gap:.5rem}
+.preview:empty{display:none}
+.ptable{width:100%;border-collapse:collapse;font-size:.95rem}
+.ptable td{padding:.4rem .5rem;border-top:1px solid var(--line);vertical-align:top}
+.ptable td:first-child{font-family:var(--serif);font-size:1.1rem}
+.bad{color:var(--error);font-size:.9rem;margin:0;padding-left:1.1rem}
+.stack{display:grid;gap:1rem}
+
+/* settings */
+.group{display:grid;gap:.7rem;padding:1.25rem 0;border-top:1px solid var(--line)}
+.group:first-of-type{border-top:0;padding-top:0}
+.check{display:flex;gap:.6rem;align-items:center;cursor:pointer}
+.check input{width:1.2rem;height:1.2rem;accent-color:var(--sea)}
+#backupText{min-height:120px;font-size:.85rem}
+
+.toast{position:fixed;left:50%;bottom:calc(1.25rem + env(safe-area-inset-bottom,0px));transform:translate(-50%,1rem);background:var(--ink);color:var(--bg);padding:.7rem 1.1rem;border-radius:12px;opacity:0;pointer-events:none;transition:opacity .2s,transform .2s;z-index:50;max-width:calc(100% - 2rem);text-align:center}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+
+@media (max-width:640px){
+  .top-wrap{position:static}
+  .top{padding:.8rem 1.25rem .4rem;border:0}
+  .top-wrap{border-bottom:0}
+  .tabs{position:fixed;left:0;right:0;bottom:0;z-index:20;background:var(--surface);border-top:1px solid var(--line);padding:.35rem .5rem calc(.35rem + env(safe-area-inset-bottom,0px));justify-content:space-around}
+  .tabs button{flex:1;padding:.7rem .2rem;font-size:.9rem}
+  main{padding-bottom:6rem}
+  body.in-session .tabs{display:none}
+  body.in-session main{padding-bottom:2rem}
+  .toast{bottom:calc(5.25rem + env(safe-area-inset-bottom,0px))}
+  body.in-session .toast{bottom:calc(1.25rem + env(safe-area-inset-bottom,0px))}
+}
+@media (max-width:480px){
+  .seg.mode{grid-template-columns:repeat(2,1fr)}
+  .rate b{font-size:.85rem}
+  .row2{grid-template-columns:1fr}
+}
+@keyframes rise{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="top-wrap">
+  <header class="top">
+    <div class="brand gr" lang="el">Λέξεις</div>
+    <nav class="tabs" aria-label="Разделы">
+      <button data-tab="study">Учить</button>
+      <button data-tab="words">Слова</button>
+      <button data-tab="add">Добавить</button>
+      <button data-tab="settings">Настройки</button>
+    </nav>
+  </header>
+</div>
+
+<main>
+  <div class="view" id="view-study"></div>
+
+  <div class="view" id="view-words" hidden>
+    <h1 class="view-title">Слова</h1>
+    <div class="filters">
+      <label class="sr-only" for="q">Поиск</label>
+      <input type="search" id="q" placeholder="Поиск по-гречески или по-русски" autocomplete="off">
+      <label class="sr-only" for="deckFilter">Колода</label>
+      <select id="deckFilter"></select>
+    </div>
+    <p class="hint" id="wcount" style="margin-top:.75rem"></p>
+    <div class="wlist" id="wlist"></div>
+  </div>
+
+  <div class="view" id="view-add" hidden>
+    <h1 class="view-title">Добавить слова</h1>
+    <div class="stack">
+      <p class="hint" style="font-size:1rem">Одна строка — одно слово: греческое слово, разделитель и перевод. Если в строке есть третья часть, она станет заметкой к карточке.</p>
+      <label class="field"><span>Список</span>
+        <textarea id="importText" spellcheck="false" placeholder="σπίτι - дом&#10;ο σκύλος - собака&#10;ευχαριστώ - спасибо - в ответ: παρακαλώ"></textarea>
+      </label>
+      <div class="row2">
+        <label class="field"><span>Колода</span><input id="importDeck" list="deckList" value="Основная" autocomplete="off"></label>
+        <label class="btn file">Загрузить файл<input type="file" id="importFile" class="sr-only" accept=".txt,.csv,.tsv,text/plain,text/csv"></label>
+      </div>
+      <p class="hint">Подойдут разделители «-», «—», «=», «;», табуляция или запятая. Порядок частей не важен: греческое слово приложение найдёт само. Строки, начинающиеся с #, пропускаются.</p>
+    </div>
+    <div class="preview" id="importPreview"></div>
+    <div class="actions"><button class="btn primary big" data-action="import" id="importBtn" disabled>Добавить</button></div>
+  </div>
+
+  <div class="view" id="view-settings" hidden>
+    <h1 class="view-title">Настройки</h1>
+    <div class="group">
+      <label class="field"><span>Новых слов в день</span><input type="number" id="setNew" min="0" max="500" inputmode="numeric"></label>
+      <p class="hint">Повторения не ограничены, лимит касается только слов, которые ты видишь впервые.</p>
+    </div>
+    <div class="group">
+      <label class="check"><input type="checkbox" id="setSpeak"> Произносить греческие слова автоматически</label>
+      <p class="hint" id="voiceStatus"></p>
+      <div class="actions"><button class="btn" data-action="testvoice">Проверить голос</button></div>
+    </div>
+    <div class="group">
+      <span class="label">Тема</span>
+      <div class="seg three" role="group" aria-label="Тема" id="themeSeg">
+        <button data-action="theme" data-v="auto">Как в системе</button>
+        <button data-action="theme" data-v="light">Светлая</button>
+        <button data-action="theme" data-v="dark">Тёмная</button>
+      </div>
+    </div>
+    <div class="group">
+      <h2>Синхронизация и резервная копия</h2>
+      <p class="hint" id="syncStatus"></p>
+      <div class="actions">
+        <button class="btn" data-action="backup">Показать копию</button>
+        <button class="btn" data-action="exporttext">Список без прогресса</button>
+      </div>
+      <label class="sr-only" for="backupText">Резервная копия</label>
+      <textarea id="backupText" spellcheck="false" placeholder="Сюда можно вставить резервную копию"></textarea>
+      <div class="actions">
+        <button class="btn" data-action="copybackup">Скопировать</button>
+        <button class="btn" data-action="restore" data-confirm>Восстановить из копии</button>
+      </div>
+    </div>
+    <div class="group">
+      <div class="actions"><button class="btn danger" data-action="wipe" data-confirm>Удалить все слова и прогресс</button></div>
+    </div>
+  </div>
+</main>
+
+<datalist id="deckList"></datalist>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(function(){
+'use strict';
+const KEY='lexeis:v1', MIN=60000, DAY=86400000, DEFAULT_DECK='Основная';
+const GR_RE=/[\u0370-\u03FF\u1F00-\u1FFF]/;
+const $=s=>document.querySelector(s);
+const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function plural(n,f){const a=Math.abs(n)%100,b=a%10;if(a>10&&a<20)return f[2];if(b>1&&b<5)return f[1];if(b===1)return f[0];return f[2];}
+const pw=(n,f)=>n+' '+plural(n,f);
+
+/* ---------- state ---------- */
+function defaultState(){return{words:[],settings:{newPerDay:20,autoSpeak:true,theme:'auto',mode:'gr',deck:'__all'},stats:{days:{},newDate:'',newCount:0},updatedAt:0};}
+function newSrs(){return{state:'new',due:0,interval:0,ease:2.5,reps:0,lapses:0,step:0};}
+function fixWord(w){
+  return{id:w.id||uid(),gr:String(w.gr||'').trim(),ru:String(w.ru||'').trim(),note:String(w.note||'').trim(),
+    deck:String(w.deck||DEFAULT_DECK).trim()||DEFAULT_DECK,created:w.created||Date.now(),srs:Object.assign(newSrs(),w.srs||{})};
+}
+function mergeState(s){
+  const d=defaultState();
+  return{words:Array.isArray(s.words)?s.words.filter(w=>w&&w.gr&&w.ru).map(fixWord):[],
+    settings:Object.assign(d.settings,s.settings||{}),stats:Object.assign(d.stats,s.stats||{}),updatedAt:+s.updatedAt||0};
+}
+function load(){try{const raw=localStorage.getItem(KEY);if(raw)return mergeState(JSON.parse(raw));}catch(e){}return defaultState();}
+let state=load(), saveWarned=false;
+function localSave(){try{localStorage.setItem(KEY,JSON.stringify(state));}catch(e){if(!saveWarned&&!cloudOK){saveWarned=true;toast('Не удалось сохранить прогресс на устройстве. Сделай резервную копию в настройках.');}}}
+function save(){state.updatedAt=Date.now();localSave();scheduleCloud();}
+
+/* ---------- Telegram ---------- */
+const TG=window.Telegram&&window.Telegram.WebApp;
+const inTG=!!(TG&&TG.initData);
+const tgAtLeast=v=>{try{return!!(TG&&TG.isVersionAtLeast&&TG.isVersionAtLeast(v));}catch(e){return false;}};
+const cloudOK=inTG&&!!TG.CloudStorage&&tgAtLeast('6.9');
+function haptic(kind){
+  if(!inTG||!TG.HapticFeedback||!tgAtLeast('6.1'))return;
+  try{if(kind==='light')TG.HapticFeedback.impactOccurred('light');else TG.HapticFeedback.notificationOccurred(kind);}catch(e){}
+}
+function tgChrome(){
+  if(!inTG)return;
+  const active=!!(session&&session.current);
+  try{if(tgAtLeast('6.1')){if(active||tab!=='study')TG.BackButton.show();else TG.BackButton.hide();}}catch(e){}
+  try{if(tgAtLeast('6.2')){if(active)TG.enableClosingConfirmation();else TG.disableClosingConfirmation();}}catch(e){}
+}
+function tgColors(){
+  if(!inTG||!tgAtLeast('6.1'))return;
+  const bg=getComputedStyle(document.documentElement).getPropertyValue('--bg').trim();
+  try{TG.setHeaderColor(bg);TG.setBackgroundColor(bg);}catch(e){}
+  try{if(tgAtLeast('7.10'))TG.setBottomBarColor(getComputedStyle(document.documentElement).getPropertyValue('--surface').trim());}catch(e){}
+}
+
+/* ---------- Telegram CloudStorage sync ----------
+   Whole state as JSON, split into chunks (2000 chars keeps each value under the
+   4096 limit even if it is counted in UTF-8 bytes). Meta key holds chunk count
+   and timestamp; the newer side wins. */
+const CHUNK=2000,CPREFIX='lx',CMETA='lx_meta';
+let lastChunks=[],cloudTimer=null,cloudBusy=false,cloudDirty=false,syncState=cloudOK?'pending':'off';
+const cs={
+  get:k=>new Promise((res,rej)=>TG.CloudStorage.getItem(k,(e,v)=>e?rej(e):res(v||''))),
+  getMany:ks=>new Promise((res,rej)=>TG.CloudStorage.getItems(ks,(e,v)=>e?rej(e):res(v||{}))),
+  set:(k,v)=>new Promise((res,rej)=>TG.CloudStorage.setItem(k,v,(e,ok)=>e?rej(e):res(ok))),
+  removeMany:ks=>new Promise((res,rej)=>TG.CloudStorage.removeItems(ks,(e,ok)=>e?rej(e):res(ok)))
+};
+function chunkify(str){const out=[];for(let i=0;i<str.length;i+=CHUNK)out.push(str.slice(i,i+CHUNK));return out.length?out:[''];}
+function setSync(st){syncState=st;renderSyncStatus();}
+function scheduleCloud(){if(!cloudOK)return;clearTimeout(cloudTimer);cloudTimer=setTimeout(pushCloud,1200);}
+async function pushCloud(){
+  if(!cloudOK)return;
+  clearTimeout(cloudTimer);
+  if(cloudBusy){cloudDirty=true;return;}
+  cloudBusy=true;
+  try{
+    const chunks=chunkify(JSON.stringify(state));
+    if(chunks.length>1000)throw new Error('too big');
+    for(let i=0;i<chunks.length;i++)if(lastChunks[i]!==chunks[i])await cs.set(CPREFIX+i,chunks[i]);
+    await cs.set(CMETA,JSON.stringify({n:chunks.length,t:state.updatedAt}));
+    if(lastChunks.length>chunks.length){const stale=[];for(let i=chunks.length;i<lastChunks.length;i++)stale.push(CPREFIX+i);try{await cs.removeMany(stale);}catch(e){}}
+    lastChunks=chunks;setSync('ok');
+  }catch(e){setSync('error');}
+  cloudBusy=false;
+  if(cloudDirty){cloudDirty=false;pushCloud();}
+}
+async function pullCloud(){
+  if(!cloudOK){setSync('off');return;}
+  try{
+    const metaRaw=await cs.get(CMETA);
+    if(!metaRaw){if(state.words.length||state.updatedAt)await pushCloud();else setSync('ok');return;}
+    const meta=JSON.parse(metaRaw);
+    const keys=[];for(let i=0;i<meta.n;i++)keys.push(CPREFIX+i);
+    const vals={};for(let i=0;i<keys.length;i+=50)Object.assign(vals,await cs.getMany(keys.slice(i,i+50)));
+    const chunks=keys.map(k=>vals[k]||'');
+    lastChunks=chunks;
+    if((meta.t||0)>(state.updatedAt||0)){
+      state=mergeState(JSON.parse(chunks.join('')));
+      localSave();applyTheme();
+      if(!session)render();
+    }else if((state.updatedAt||0)>(meta.t||0)){scheduleCloud();}
+    setSync('ok');
+  }catch(e){setSync('error');}
+}
+function renderSyncStatus(){
+  const el=document.getElementById('syncStatus');if(!el)return;
+  el.textContent=!inTG?'Синхронизация между устройствами работает, когда приложение открыто в Telegram. Здесь слова хранятся только в этом браузере, перенести их можно через резервную копию.'
+    :!cloudOK?'Эта версия Telegram не поддерживает облачное хранилище. Обнови приложение Telegram, а пока слова хранятся только на этом устройстве.'
+    :syncState==='error'?'Не удалось связаться с облаком Telegram. Прогресс сохранён на устройстве и отправится при следующем изменении.'
+    :syncState==='pending'?'Загружаю данные из облака Telegram…'
+    :'Слова и прогресс синхронизируются через Telegram на всех твоих устройствах. Резервная копия пригодится, чтобы перенести слова из браузерной версии.';
+}
+function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,8);}
+const getWord=id=>state.words.find(w=>w.id===id);
+
+/* ---------- dates ---------- */
+function dateKey(d){d=d||new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
+function endOfToday(){const d=new Date();d.setHours(23,59,59,999);return d.getTime();}
+function newLeftToday(){const t=dateKey();const used=state.stats.newDate===t?state.stats.newCount:0;return Math.max(0,(+state.settings.newPerDay||0)-used);}
+function bumpNew(){const t=dateKey();if(state.stats.newDate!==t){state.stats.newDate=t;state.stats.newCount=0;}state.stats.newCount++;}
+function bumpDay(){const t=dateKey();state.stats.days[t]=(state.stats.days[t]||0)+1;
+  const keys=Object.keys(state.stats.days).sort();if(keys.length>400)keys.slice(0,keys.length-400).forEach(k=>delete state.stats.days[k]);}
+function streak(){let n=0;const d=new Date();if(!state.stats.days[dateKey(d)])d.setDate(d.getDate()-1);
+  while(state.stats.days[dateKey(d)]){n++;d.setDate(d.getDate()-1);}return n;}
+function fmtDur(ms){
+  const m=Math.round(ms/MIN);if(m<60)return Math.max(1,m)+' мин';
+  const h=Math.round(ms/3600000);if(h<24)return h+' ч';
+  const d=Math.round(ms/DAY);if(d<31)return d+' д';
+  const mo=Math.round(d/30);if(mo<12)return mo+' мес';
+  const y=d/365;return(y<10?String(Math.round(y*10)/10).replace('.',','):Math.round(y))+' г';
+}
+function fmtWhen(ts){
+  const start=new Date();start.setHours(0,0,0,0);
+  const days=Math.floor((ts-start.getTime())/DAY);
+  if(days<=0)return'сегодня позже';if(days===1)return'завтра';if(days===2)return'послезавтра';
+  return'через '+pw(days,['день','дня','дней']);
+}
+
+/* ---------- spaced repetition ---------- */
+function schedule(prev,g,now){
+  const s=Object.assign({},prev);s.reps=(s.reps||0)+1;
+  const grad=iv=>{s.state='review';s.step=0;s.interval=Math.max(1,Math.round(iv));s.due=now+s.interval*DAY;};
+  if(s.state==='new'||s.state==='learning'){
+    if(s.state==='new'){s.state='learning';s.step=0;}
+    if(g===0){s.step=0;s.due=now+MIN;}
+    else if(g===1){s.due=now+(s.step===0?5:10)*MIN;}
+    else if(g===2){if(s.step===0){s.step=1;s.due=now+10*MIN;}else grad(1);}
+    else{s.ease+=0.15;grad(4);}
+  }else if(s.state==='relearning'){
+    if(g===0)s.due=now+MIN;else if(g===1)s.due=now+10*MIN;else if(g===2)grad(s.interval);else grad(s.interval+1);
+  }else{
+    const iv=Math.max(1,s.interval||1);
+    const good=Math.max(iv+1,Math.round(iv*s.ease));
+    if(g===0){s.lapses=(s.lapses||0)+1;s.ease=Math.max(1.3,s.ease-0.2);s.interval=Math.max(1,Math.round(iv*0.5));s.state='relearning';s.due=now+MIN;}
+    else if(g===1){s.ease=Math.max(1.3,s.ease-0.15);grad(Math.min(good-1,Math.max(iv+1,iv*1.2)));}
+    else if(g===2){grad(good);}
+    else{grad(Math.max(good+1,iv*s.ease*1.3));s.ease+=0.15;}
+  }
+  return s;
+}
+
+/* ---------- text matching ---------- */
+const ARTICLES=new Set(['ο','η','το','οι','τα','τον','την','τη','του','της','των','τους','τις','ενας','μια','ενα']);
+function strip(s){return s.normalize('NFD').replace(/[\u0300-\u036f]/g,'').normalize('NFC');}
+function normGr(s){return strip(String(s).toLowerCase()).replace(/ς/g,'σ').replace(/[^\p{L}\p{N}\s]/gu,' ').replace(/\s+/g,' ').trim();}
+const G2L={'α':'a','β':'v','γ':'g','δ':'d','ε':'e','ζ':'z','η':'i','θ':'th','ι':'i','κ':'k','λ':'l','μ':'m','ν':'n','ξ':'ks','ο':'o','π':'p','ρ':'r','σ':'s','τ':'t','υ':'i','φ':'f','χ':'h','ψ':'ps','ω':'o'};
+function grToLat(n){return n.replace(/ου/g,'u').replace(/αυ/g,'av').replace(/ευ/g,'ev').replace(/./g,c=>G2L[c]!==undefined?G2L[c]:c);}
+function latCanon(s){
+  return strip(String(s).toLowerCase()).replace(/[^a-z0-9\s]/g,' ').replace(/\s+/g,' ').trim()
+    .replace(/8/g,'th').replace(/3/g,'ks').replace(/ou/g,'u').replace(/ch/g,'h').replace(/y/g,'i').replace(/w/g,'o')
+    .replace(/mp/g,'b').replace(/b/g,'v').replace(/c/g,'k').replace(/j/g,'g')
+    .replace(/ai/g,'e').replace(/ei|oi/g,'i').replace(/af/g,'av').replace(/ef/g,'ev').replace(/(.)\1+/g,'$1');
+}
+function lev(a,b){
+  if(a===b)return 0;const m=a.length,n=b.length;if(!m)return n;if(!n)return m;
+  let prev=[];for(let j=0;j<=n;j++)prev[j]=j;
+  for(let i=1;i<=m;i++){const cur=[i];for(let j=1;j<=n;j++)cur[j]=Math.min(prev[j]+1,cur[j-1]+1,prev[j-1]+(a[i-1]===b[j-1]?0:1));prev=cur;}
+  return prev[n];
+}
+function variants(gr,fn){
+  const out=new Set();
+  gr.split(/[,;\/]/).forEach(p=>{const n=fn(p);if(!n)return;out.add(n);const ws=n.split(' ');if(ws.length>1&&ARTICLES.has(normGr(ws[0])))out.add(ws.slice(1).join(' '));});
+  if(!out.size)out.add(fn(gr));return[...out];
+}
+function checkAnswer(input,gr){
+  const rank={wrong:0,near:1,ok:2};let v='wrong';
+  const tol=len=>len>=10?2:len>=4?1:0;
+  const test=(a,b)=>{const d=lev(a,b);return d===0?'ok':d<=tol(b.length)?'near':'wrong';};
+  const upd=x=>{if(rank[x]>rank[v])v=x;};
+  const cands=variants(gr,normGr);
+  let accent=false;
+  if(GR_RE.test(input)){
+    const n=normGr(input);cands.forEach(c=>upd(test(n,c)));
+    if(v==='ok'){
+      const raw=input.toLowerCase().replace(/ς/g,'σ').replace(/\s+/g,' ').trim();
+      const raws=variants(gr,p=>p.toLowerCase().replace(/ς/g,'σ').replace(/[.,!?;:«»"']/g,'').replace(/\s+/g,' ').trim());
+      accent=!raws.includes(raw);
+    }
+  }else{
+    const base=latCanon(input);const vs=[...new Set([base.replace(/x/g,'ks'),base.replace(/x/g,'h')])];
+    cands.forEach(c=>{const t=latCanon(grToLat(c));vs.forEach(x=>upd(test(x,t)));});
+  }
+  return{v,accent};
+}
+
+/* ---------- import parsing ---------- */
+function parseList(text){
+  const out=[],bad=[];
+  const seps=['\t',' — ',' – ',' - ',' = ',' | ',';','|','='];
+  text.split(/\r?\n/).forEach(raw=>{
+    const line=raw.trim();if(!line||line.startsWith('#'))return;
+    let parts=null;
+    for(const s of seps){if(line.includes(s)){parts=line.split(s);break;}}
+    if(!parts){const m=line.match(/^(.+?)\s*[-—–]\s*(.+)$/);if(m)parts=[m[1],m[2]];
+      else if(line.includes(',')){const i=line.indexOf(',');parts=[line.slice(0,i),line.slice(i+1)];}}
+    if(!parts){bad.push(line);return;}
+    parts=parts.map(p=>p.trim().replace(/^["']+|["']+$/g,'').trim()).filter(Boolean);
+    if(parts.length<2){bad.push(line);return;}
+    let a=parts[0],b=parts[1];const rest=parts.slice(2);
+    if(!GR_RE.test(a)&&GR_RE.test(b)){const t=a;a=b;b=t;}
+    if(!GR_RE.test(a)){bad.push(line);return;}
+    out.push({gr:a,ru:b,note:rest.join(', ')});
+  });
+  return{out,bad};
+}
+
+/* ---------- speech ---------- */
+const hasTTS='speechSynthesis' in window&&typeof SpeechSynthesisUtterance!=='undefined';
+let grVoice=null;
+function loadVoices(){
+  if(!hasTTS)return renderVoiceStatus();
+  try{const vs=speechSynthesis.getVoices();grVoice=vs.find(v=>/^el([-_]|$)/i.test(v.lang))||null;}catch(e){grVoice=null;}
+  renderVoiceStatus();
+}
+function speak(text){
+  if(!hasTTS)return;
+  try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);u.lang='el-GR';if(grVoice)u.voice=grVoice;u.rate=0.9;speechSynthesis.speak(u);}catch(e){}
+}
+const SPEAK_ICON='<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4z"/><path d="M16.5 8.5a5 5 0 0 1 0 7"/><path d="M19 6a8.5 8.5 0 0 1 0 12"/></svg>';
+const speakBtn=t=>hasTTS?`<button class="speak" data-action="speak" data-text="${esc(t)}" aria-label="Произнести">${SPEAK_ICON}</button>`:'';
+
+/* ---------- decks ---------- */
+function decks(){return[...new Set(state.words.map(w=>w.deck||DEFAULT_DECK))].sort((a,b)=>a.localeCompare(b,'ru'));}
+function deckOptions(sel){
+  return`<option value="__all"${sel==='__all'?' selected':''}>Все колоды</option>`+decks().map(d=>`<option value="${esc(d)}"${d===sel?' selected':''}>${esc(d)}</option>`).join('');
+}
+function deckWords(){const d=state.settings.deck;return d==='__all'?state.words:state.words.filter(w=>(w.deck||DEFAULT_DECK)===d);}
+function refreshDatalist(){$('#deckList').innerHTML=decks().map(d=>`<option value="${esc(d)}">`).join('');}
+
+/* ---------- tabs ---------- */
+let tab='study';
+function setTab(t){
+  tab=t;
+  document.querySelectorAll('[data-tab]').forEach(b=>b.setAttribute('aria-current',b.dataset.tab===t?'page':'false'));
+  document.querySelectorAll('.view').forEach(v=>v.hidden=v.id!=='view-'+t);
+  render();window.scrollTo(0,0);
+}
+function render(){
+  tgChrome();
+  document.body.classList.toggle('in-session',tab==='study'&&!!session&&!!session.current);
+  refreshDatalist();
+  if(tab==='study')renderStudy();else if(tab==='words')renderWords();else if(tab==='add')updatePreview();else renderSettings();
+}
+
+/* ---------- study home ---------- */
+const MODES=[['gr','С греческого','Видишь греческое слово и вспоминаешь перевод.'],
+  ['ru','С русского','Видишь перевод и вспоминаешь греческое слово.'],
+  ['type','Письменно','Видишь перевод и пишешь слово по-гречески. Можно латиницей и без ударений.'],
+  ['mix','Вперемешку','Направление выбирается случайно для каждой карточки.']];
+let session=null;
+
+function renderStudy(){
+  const el=$('#view-study');
+  if(session){renderSession(el);return;}
+  if(!state.words.length){
+    el.innerHTML=`<section class="empty"><p class="hero-gr" lang="el">Καλώς ήρθες${tgName?', '+esc(tgName):''}</p>
+      <p class="lead">Список пока пуст. Загрузи свои слова, и здесь появятся карточки для повторения.</p>
+      <div class="actions" style="margin-top:1.5rem"><button class="btn primary big" data-go="add">Добавить слова</button></div></section>`;
+    return;
+  }
+  if(state.settings.deck!=='__all'&&!decks().includes(state.settings.deck))state.settings.deck='__all';
+  const words=deckWords(),eod=endOfToday();
+  const due=words.filter(w=>w.srs.state!=='new'&&w.srs.due<=eod).length;
+  const fresh=words.filter(w=>w.srs.state==='new').length;
+  const nl=Math.min(fresh,newLeftToday());
+  const learned=words.filter(w=>w.srs.state==='review'&&w.srs.interval>=21).length;
+  const st=streak();
+  let headline;
+  if(due+nl>0){
+    const parts=[];if(due)parts.push(pw(due,['повторение','повторения','повторений']));if(nl)parts.push(pw(nl,['новое слово','новых слова','новых слов']));
+    headline='На сегодня '+parts.join(' и ')+'.';
+  }else{
+    const nexts=words.filter(w=>w.srs.state!=='new').map(w=>w.srs.due);
+    const next=nexts.length?Math.min(...nexts):0;
+    headline='На сегодня всё повторено.'+(next?' Следующие слова вернутся '+fmtWhen(next)+'.':'')+(fresh&&!nl?' Лимит новых слов на сегодня исчерпан.':'');
+  }
+  const mode=state.settings.mode;const modeInfo=MODES.find(m=>m[0]===mode)||MODES[0];
+  const dk=decks();
+  el.innerHTML=`<section>
+    <h1 class="hero-gr" lang="el">Σήμερα</h1>
+    <p class="lead">${headline}</p>
+    <p class="meta">В ${state.settings.deck==='__all'?'списке':'колоде'} ${pw(words.length,['слово','слова','слов'])}, ${learned} ${plural(learned,['закреплено','закреплены','закреплены'])} надолго.${st?' Серия: '+pw(st,['день','дня','дней'])+' подряд.':''}</p>
+  </section>
+  <section class="setup">
+    ${dk.length>1?`<label class="field"><span>Колода</span><select id="deckSel">${deckOptions(state.settings.deck)}</select></label>`:''}
+    <div class="field"><span class="label" id="modeLbl">Режим</span>
+      <div class="seg mode" role="group" aria-labelledby="modeLbl">${MODES.map(m=>`<button data-action="mode" data-v="${m[0]}" aria-pressed="${m[0]===mode}">${m[1]}</button>`).join('')}</div>
+      <p class="hint">${modeInfo[2]}</p>
+    </div>
+    <div class="actions">
+      <button class="btn primary big" data-action="start"${due+nl?'':' disabled'}>Начать</button>
+      <button class="btn big" data-action="practice">Тренировка без расписания</button>
+    </div>
+    <p class="hint">Тренировка показывает до 30 случайных слов и не меняет даты повторения.</p>
+  </section>`;
+}
+
+/* ---------- session ---------- */
+function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+function startSession(practice){
+  const words=deckWords();if(!words.length)return;
+  let q=[];
+  if(practice){q=shuffle(words).slice(0,30).map(w=>w.id);}
+  else{
+    const eod=endOfToday();
+    const due=words.filter(w=>w.srs.state!=='new'&&w.srs.due<=eod).sort((a,b)=>a.srs.due-b.srs.due);
+    const fresh=words.filter(w=>w.srs.state==='new').sort((a,b)=>a.created-b.created).slice(0,newLeftToday());
+    let i=0,j=0;
+    while(i<due.length||j<fresh.length){for(let k=0;k<3&&i<due.length;k++)q.push(due[i++].id);if(j<fresh.length)q.push(fresh[j++].id);}
+  }
+  if(!q.length){toast('Сейчас нечего повторять.');return;}
+  session={queue:q,practice,done:0,current:null,revealed:false,result:null,typed:''};
+  next();
+}
+function next(){
+  const id=session.queue.shift();
+  if(!id){session.current=null;render();return;}
+  const w=getWord(id);if(!w)return next();
+  const m=state.settings.mode;
+  session.current={id,dir:m==='mix'?(Math.random()<.5?'gr':'ru'):m};
+  session.revealed=false;session.result=null;session.typed='';
+  render();
+  if(session.current.dir==='gr'&&state.settings.autoSpeak)speak(w.gr);
+  if(session.current.dir==='type'){const inp=$('#typeIn');if(inp)inp.focus();}
+}
+function reveal(){
+  if(!session||!session.current||session.revealed)return;
+  session.revealed=true;render();
+  const w=getWord(session.current.id);
+  if(session.current.dir==='ru'&&state.settings.autoSpeak)speak(w.gr);
+}
+function check(giveUp){
+  if(!session||!session.current||session.revealed)return;
+  const w=getWord(session.current.id);
+  const inp=$('#typeIn');const val=giveUp?'':(inp?inp.value:'');
+  if(!giveUp&&!val.trim()){if(inp)inp.focus();return;}
+  session.typed=val;session.result=giveUp?{v:'wrong',accent:false}:checkAnswer(val,w.gr);
+  session.revealed=true;render();
+  haptic(session.result.v==='ok'?'success':session.result.v==='near'?'warning':'error');
+  if(state.settings.autoSpeak)speak(w.gr);
+}
+function rate(g){
+  if(!session||!session.current||!session.revealed)return;
+  const id=session.current.id,w=getWord(id);
+  if(w&&!session.practice){
+    const wasNew=w.srs.state==='new';
+    w.srs=schedule(w.srs,g,Date.now());
+    if(wasNew)bumpNew();bumpDay();save();
+    if(w.srs.state!=='review')session.queue.splice(Math.min(session.queue.length,g===0?3:5),0,id);
+  }else if(w&&g===0){session.queue.splice(Math.min(session.queue.length,3),0,id);}
+  session.done++;
+  next();
+}
+function typePrimary(){const v=session.result&&session.result.v;rate(v==='wrong'?0:2);}
+
+function renderSession(el){
+  if(!session.current){
+    const n=session.done;const wasPractice=session.practice;
+    el.innerHTML=`<section><h1 class="hero-gr" lang="el">Μπράβο</h1>
+      <p class="lead">${n?'Готово: '+pw(n,['карточка','карточки','карточек'])+'.':'Карточек больше нет.'}${wasPractice?' Это была тренировка, расписание не изменилось.':''}</p>
+      <div class="actions" style="margin-top:1.5rem"><button class="btn primary big" data-action="home">На главную</button><button class="btn big" data-action="practice">Ещё тренировка</button></div></section>`;
+    session=null;document.body.classList.remove('in-session');
+    return;
+  }
+  const w=getWord(session.current.id),dir=session.current.dir,rev=session.revealed;
+  const left=session.queue.length+1,pct=Math.round(100*session.done/(session.done+left));
+  const grBlock=`<div class="word" lang="el">${esc(w.gr)}</div>${speakBtn(w.gr)}`;
+  const ruBlock=`<div class="word-ru">${esc(w.ru)}</div>`;
+  const noteBlock=w.note?`<p class="note">${esc(w.note)}</p>`:'';
+  const prompts={gr:'Что это значит?',ru:'Как это по-гречески?',type:'Напиши по-гречески'};
+  let face=dir==='gr'?grBlock:ruBlock,answer='',controls='';
+  if(rev){
+    if(dir==='gr')answer=ruBlock+noteBlock;
+    else if(dir==='ru')answer=grBlock+noteBlock;
+    else{
+      const r=session.result;
+      const msg=r.v==='ok'?(r.accent?'Верно. Проверь ударение.':'Верно.'):r.v==='near'?'Почти. Сверь написание.':(session.typed?'Не совсем.':'Правильный ответ:');
+      answer=`<p class="verdict ${r.v}">${msg}</p>${session.typed&&r.v!=='ok'?`<p class="yours${r.v==='wrong'?' struck':''}" lang="el">${esc(session.typed)}</p>`:''}${grBlock}${noteBlock}`;
+    }
+  }
+  if(!rev&&dir!=='type'){
+    controls=`<button class="btn primary big" data-action="reveal">Показать ответ</button><p class="keys">Пробел, чтобы открыть</p>`;
+  }else if(!rev){
+    controls=`<div class="type-row"><label class="sr-only" for="typeIn">Ответ по-гречески</label>
+      <input id="typeIn" lang="el" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" enterkeyhint="done" placeholder="…">
+      <button class="btn primary" data-action="check">Проверить</button></div>
+      <button class="btn ghost" data-action="dunno">Не знаю</button>`;
+  }else if(dir!=='type'){
+    const labels=['Не помню','С трудом','Помню','Легко'];
+    controls=`<div class="rate">${labels.map((l,g)=>`<button class="r${g}" data-action="rate" data-g="${g}"><b>${l}</b>${session.practice?'':`<small>${fmtDur(schedule(w.srs,g,Date.now()).due-Date.now())}</small>`}</button>`).join('')}</div>
+      <p class="keys">Клавиши 1–4 или пробел для «Помню»</p>`;
+  }else{
+    const v=session.result.v;
+    const btns=v==='ok'?[['Дальше',2,true],['Это было легко',3]]:v==='near'?[['Засчитать',2,true],['Не засчитывать',0]]:[['Дальше',0,true],['Засчитать, это опечатка',2]];
+    controls=`<div class="actions">${btns.map(b=>`<button class="btn big${b[2]?' primary':''}" data-action="rate" data-g="${b[1]}">${b[0]}</button>`).join('')}</div><p class="keys">Enter, чтобы продолжить</p>`;
+  }
+  el.innerHTML=`<div class="session-top"><button class="link" data-action="end">Завершить</button>
+      <div class="progress" role="progressbar" aria-valuenow="${pct}" aria-valuemin="0" aria-valuemax="100"><span style="width:${pct}%"></span></div>
+      <span class="left" aria-label="Осталось карточек">${left}</span></div>
+    <div class="card${!rev&&dir!=='type'?' clickable':''}"${!rev&&dir!=='type'?' data-action="reveal"':''}>
+      <div class="prompt"><span>${prompts[dir]}</span>${session.practice?'<span class="practice">Тренировка</span>':''}</div>
+      ${face}${rev?`<div class="answer">${answer}</div>`:''}
+    </div>
+    <div class="controls">${controls}</div>`;
+}
+
+/* ---------- words ---------- */
+let openId=null;
+function statusOf(w){
+  const s=w.srs;if(s.state==='new')return['новое','new'];
+  if(s.state!=='review')return['изучается','due'];
+  if(s.due<=endOfToday())return['повторить сегодня','due'];
+  return['через '+fmtDur(s.due-Date.now()),''];
+}
+function renderWords(){
+  const sel=$('#deckFilter');const cur=sel.value||state.settings.deck||'__all';
+  sel.innerHTML=deckOptions(decks().includes(cur)?cur:'__all');
+  sel.hidden=decks().length<2;
+  renderList();
+}
+function renderList(){
+  const q=normGr($('#q').value||'');const dk=$('#deckFilter').value||'__all';
+  let ws=state.words.filter(w=>dk==='__all'||(w.deck||DEFAULT_DECK)===dk);
+  if(q)ws=ws.filter(w=>normGr(w.gr).includes(q)||normGr(w.ru).includes(q)||normGr(w.note).includes(q));
+  ws=ws.slice().sort((a,b)=>b.created-a.created);
+  const total=ws.length;const shown=ws.slice(0,300);
+  $('#wcount').textContent=state.words.length?(q?'Найдено: '+total:pw(total,['слово','слова','слов']))+(total>300?'. Показаны первые 300, уточни поиск.':''):'';
+  if(!state.words.length){$('#wlist').innerHTML=`<p class="lead">Здесь появятся твои слова.</p><div class="actions"><button class="btn primary" data-go="add">Добавить слова</button></div>`;return;}
+  $('#wlist').innerHTML=shown.map(w=>{
+    const st=statusOf(w);
+    if(w.id===openId)return`<div class="wrow" data-id="${w.id}">
+      <button class="wmain" data-action="wtoggle" data-id="${w.id}" aria-expanded="true"><span class="wgr" lang="el">${esc(w.gr)}</span><span class="wru">${esc(w.ru)}</span><span class="wst ${st[1]}">${st[0]}</span></button>
+      <div class="edit">
+        <label class="field"><span>По-гречески</span><input data-f="gr" lang="el" value="${esc(w.gr)}"></label>
+        <label class="field"><span>Перевод</span><input data-f="ru" value="${esc(w.ru)}"></label>
+        <label class="field"><span>Заметка</span><input data-f="note" value="${esc(w.note)}"></label>
+        <label class="field"><span>Колода</span><input data-f="deck" list="deckList" value="${esc(w.deck)}"></label>
+        <div class="actions">
+          <button class="btn primary" data-action="wsave" data-id="${w.id}">Сохранить</button>
+          <button class="btn" data-action="wreset" data-id="${w.id}" data-confirm>Сбросить прогресс</button>
+          <button class="btn danger" data-action="wdel" data-id="${w.id}" data-confirm>Удалить</button>
+        </div>
+      </div></div>`;
+    return`<div class="wrow"><button class="wmain" data-action="wtoggle" data-id="${w.id}" aria-expanded="false"><span class="wgr" lang="el">${esc(w.gr)}</span><span class="wru">${esc(w.ru)}</span><span class="wst ${st[1]}">${st[0]}</span></button></div>`;
+  }).join('');
+}
+
+/* ---------- add ---------- */
+let parsed={items:[],dups:0,bad:[]};
+function updatePreview(){
+  const text=$('#importText').value;const box=$('#importPreview');const btn=$('#importBtn');
+  if(!text.trim()){box.innerHTML='';btn.disabled=true;btn.textContent='Добавить';parsed={items:[],dups:0,bad:[]};return;}
+  const{out,bad}=parseList(text);
+  const existing=new Set(state.words.map(w=>normGr(w.gr)));
+  const items=[];let dups=0;
+  out.forEach(it=>{const k=normGr(it.gr);if(existing.has(k)){dups++;return;}existing.add(k);items.push(it);});
+  parsed={items,dups,bad};
+  const lines=[];
+  lines.push(`<p class="meta">${items.length?'Готово к добавлению: '+pw(items.length,['слово','слова','слов'])+'.':'Новых слов не найдено.'}${dups?' Уже есть в списке: '+dups+'.':''}</p>`);
+  if(items.length)lines.push(`<div style="overflow-x:auto"><table class="ptable"><tbody>${items.slice(0,6).map(i=>`<tr><td lang="el">${esc(i.gr)}</td><td>${esc(i.ru)}${i.note?`<br><span class="hint">${esc(i.note)}</span>`:''}</td></tr>`).join('')}</tbody></table></div>${items.length>6?`<p class="hint">и ещё ${items.length-6}</p>`:''}`);
+  if(bad.length)lines.push(`<p class="meta" style="color:var(--error)">Не удалось разобрать ${pw(bad.length,['строку','строки','строк'])}. В строке нужны греческое слово и перевод через разделитель:</p><ul class="bad">${bad.slice(0,5).map(b=>`<li>${esc(b)}</li>`).join('')}</ul>`);
+  box.innerHTML=lines.join('');
+  btn.disabled=!items.length;
+  btn.textContent=items.length?'Добавить '+pw(items.length,['слово','слова','слов']):'Добавить';
+}
+function doImport(){
+  if(!parsed.items.length)return;
+  const deck=($('#importDeck').value||'').trim()||DEFAULT_DECK;
+  const now=Date.now();
+  parsed.items.forEach((it,i)=>state.words.push(fixWord({gr:it.gr,ru:it.ru,note:it.note,deck,created:now+i})));
+  save();
+  const n=parsed.items.length;
+  $('#importText').value='';updatePreview();refreshDatalist();
+  toast('Добавлено: '+pw(n,['слово','слова','слов'])+'.');
+  setTab('study');
+}
+
+/* ---------- settings ---------- */
+function applyTheme(){const t=state.settings.theme;const eff=(t==='light'||t==='dark')?t:(inTG&&TG.colorScheme?TG.colorScheme:'');if(eff)document.documentElement.setAttribute('data-theme',eff);else document.documentElement.removeAttribute('data-theme');tgColors();}
+function renderVoiceStatus(){
+  const el=$('#voiceStatus');if(!el)return;
+  if(!hasTTS){el.textContent='Этот браузер не умеет озвучивать текст.';return;}
+  el.textContent=grVoice?'Греческий голос: '+grVoice.name+'.':'Греческий голос в системе не найден. Браузер попробует прочитать слово другим голосом. Голос можно установить в системных настройках синтеза речи.';
+}
+function renderSettings(){
+  $('#setNew').value=state.settings.newPerDay;
+  $('#setSpeak').checked=!!state.settings.autoSpeak;
+  document.querySelectorAll('#themeSeg button').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.v===state.settings.theme)));
+  renderVoiceStatus();
+  renderSyncStatus();
+}
+function copyText(text){
+  const done=()=>toast('Скопировано.');
+  const fallback=()=>{const ta=$('#backupText');ta.value=text;ta.select();try{document.execCommand('copy');done();}catch(e){toast('Выдели текст и скопируй его вручную.');}};
+  try{if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(text).then(done,fallback);else fallback();}catch(e){fallback();}
+}
+
+/* ---------- confirm-by-second-click ---------- */
+function armed(btn){
+  if(btn.classList.contains('armed')){btn.classList.remove('armed');btn.textContent=btn.dataset.label;clearTimeout(btn._t);return true;}
+  btn.dataset.label=btn.textContent;btn.classList.add('armed');btn.textContent='Нажми ещё раз, чтобы подтвердить';
+  btn._t=setTimeout(()=>{btn.classList.remove('armed');btn.textContent=btn.dataset.label;},3500);
+  return false;
+}
+
+/* ---------- toast ---------- */
+let toastT;
+function toast(msg){const t=$('#toast');t.textContent=msg;t.classList.add('show');clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove('show'),2800);}
+
+/* ---------- events ---------- */
+document.addEventListener('click',e=>{
+  const tabBtn=e.target.closest('[data-tab]');if(tabBtn){setTab(tabBtn.dataset.tab);return;}
+  const go=e.target.closest('[data-go]');if(go){setTab(go.dataset.go);return;}
+  const el=e.target.closest('[data-action]');if(!el)return;
+  const a=el.dataset.action;
+  if(el.hasAttribute('data-confirm')&&!armed(el))return;
+  switch(a){
+    case'start':startSession(false);break;
+    case'practice':startSession(true);break;
+    case'mode':state.settings.mode=el.dataset.v;save();renderStudy();break;
+    case'reveal':reveal();break;
+    case'check':check(false);break;
+    case'dunno':check(true);break;
+    case'rate':haptic('light');rate(+el.dataset.g);break;
+    case'speak':e.stopPropagation();speak(el.dataset.text);break;
+    case'end':if(session){session.queue=[];session.current=null;}render();break;
+    case'home':session=null;render();break;
+    case'wtoggle':openId=openId===el.dataset.id?null:el.dataset.id;renderList();break;
+    case'wsave':{
+      const w=getWord(el.dataset.id);const row=el.closest('.wrow');const f=k=>row.querySelector(`[data-f="${k}"]`).value.trim();
+      if(!f('gr')||!f('ru')){toast('Нужны и греческое слово, и перевод.');return;}
+      w.gr=f('gr');w.ru=f('ru');w.note=f('note');w.deck=f('deck')||DEFAULT_DECK;
+      save();openId=null;renderWords();toast('Сохранено.');break;}
+    case'wreset':{const w=getWord(el.dataset.id);w.srs=newSrs();save();renderList();toast('Прогресс сброшен.');break;}
+    case'wdel':state.words=state.words.filter(w=>w.id!==el.dataset.id);openId=null;save();renderWords();toast('Удалено.');break;
+    case'import':doImport();break;
+    case'theme':state.settings.theme=el.dataset.v;save();applyTheme();renderSettings();break;
+    case'testvoice':speak('Καλημέρα! Τι κάνεις;');break;
+    case'backup':$('#backupText').value=JSON.stringify({app:'lexeis',v:1,words:state.words,stats:state.stats,settings:state.settings});toast('Копия готова. Скопируй её.');break;
+    case'exporttext':$('#backupText').value=state.words.map(w=>w.gr+' - '+w.ru+(w.note?' - '+w.note:'')).join('\n');toast('Список готов. Его можно вставить во вкладку «Добавить».');break;
+    case'copybackup':{const v=$('#backupText').value;if(!v.trim()){toast('Сначала нажми «Показать копию».');return;}copyText(v);break;}
+    case'restore':{
+      let data;try{data=JSON.parse($('#backupText').value);}catch(err){toast('Это не резервная копия. Обычный список слов вставляй во вкладку «Добавить».');return;}
+      if(!data||!Array.isArray(data.words)){toast('В копии не найдено слов.');return;}
+      state=mergeState(data);save();applyTheme();session=null;$('#backupText').value='';renderSettings();toast('Восстановлено: '+pw(state.words.length,['слово','слова','слов'])+'.');break;}
+    case'wipe':state=Object.assign(defaultState(),{settings:state.settings});save();session=null;toast('Все слова удалены.');renderSettings();break;
+  }
+});
+document.addEventListener('change',e=>{
+  if(e.target.id==='deckSel'){state.settings.deck=e.target.value;save();renderStudy();}
+  else if(e.target.id==='deckFilter'){openId=null;renderList();}
+  else if(e.target.id==='setNew'){let n=parseInt(e.target.value,10);if(isNaN(n)||n<0)n=0;if(n>500)n=500;state.settings.newPerDay=n;e.target.value=n;save();}
+  else if(e.target.id==='setSpeak'){state.settings.autoSpeak=e.target.checked;save();}
+  else if(e.target.id==='importFile'){
+    const f=e.target.files&&e.target.files[0];if(!f)return;
+    const r=new FileReader();
+    r.onload=()=>{const ta=$('#importText');ta.value=(ta.value.trim()?ta.value.trim()+'\n':'')+String(r.result||'');updatePreview();
+      const dk=$('#importDeck');if(dk.value===DEFAULT_DECK&&!decks().includes(DEFAULT_DECK)){}};
+    r.onerror=()=>toast('Не удалось прочитать файл.');
+    r.readAsText(f);e.target.value='';
+  }
+});
+$('#importText').addEventListener('input',updatePreview);
+$('#q').addEventListener('input',()=>{openId=null;renderList();});
+document.addEventListener('keydown',e=>{
+  if(tab!=='study'||!session||!session.current)return;
+  const t=e.target;const inField=t.matches('input,textarea,select');
+  if(t.matches('button')&&(e.key==='Enter'||e.key===' '))return;
+  const dir=session.current.dir;
+  if(!session.revealed){
+    if(dir==='type'){if(e.key==='Enter'&&t.id==='typeIn'){e.preventDefault();check(false);}return;}
+    if(inField)return;
+    if(e.key===' '||e.key==='Enter'){e.preventDefault();reveal();}
+  }else{
+    if(inField)return;
+    if(dir==='type'){if(e.key==='Enter'||e.key===' '){e.preventDefault();typePrimary();}return;}
+    if(['1','2','3','4'].includes(e.key)){e.preventDefault();rate(+e.key-1);}
+    else if(e.key===' '||e.key==='Enter'){e.preventDefault();rate(2);}
+  }
+});
+
+/* ---------- init ---------- */
+const tgName=inTG&&TG.initDataUnsafe&&TG.initDataUnsafe.user?TG.initDataUnsafe.user.first_name:'';
+if(inTG){
+  try{TG.ready();TG.expand();}catch(e){}
+  try{if(tgAtLeast('7.7'))TG.disableVerticalSwipes();}catch(e){}
+  try{TG.onEvent('themeChanged',applyTheme);}catch(e){}
+  try{TG.BackButton.onClick(()=>{if(session&&session.current){session.queue=[];session.current=null;render();}else{session=null;setTab('study');}});}catch(e){}
+}
+document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden'&&cloudTimer)pushCloud();});
+applyTheme();
+if(hasTTS){loadVoices();try{speechSynthesis.addEventListener('voiceschanged',loadVoices);}catch(e){speechSynthesis.onvoiceschanged=loadVoices;}}
+setTab('study');
+pullCloud();
+})();
+</script>
+</body>
+</html>
