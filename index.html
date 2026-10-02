@@ -64,7 +64,7 @@ h2{font-size:1.1rem;font-weight:600;margin:0 0 .5rem}
 input:not([type=checkbox]):not([type=file]),select,textarea{
   width:100%;padding:.75rem .9rem;border-radius:10px;border:1px solid var(--line);background:var(--surface);min-height:46px}
 textarea{min-height:220px;resize:vertical;line-height:1.5}
-.seg{display:grid;grid-template-columns:repeat(4,1fr);gap:.3rem;background:var(--surface-2);padding:.3rem;border-radius:14px}
+.seg{display:grid;grid-template-columns:repeat(3,1fr);gap:.3rem;background:var(--surface-2);padding:.3rem;border-radius:14px}
 .seg.three{grid-template-columns:repeat(3,1fr)}
 .seg button{border:0;background:transparent;color:var(--ink-soft);font-size:.92rem;font-weight:500;padding:.55rem .4rem;border-radius:10px;cursor:pointer;min-height:44px}
 .seg button[aria-pressed="true"]{background:var(--surface);color:var(--ink);box-shadow:0 1px 0 var(--line)}
@@ -102,9 +102,11 @@ textarea{min-height:220px;resize:vertical;line-height:1.5}
 .rate small{font-size:.8rem;color:var(--ink-soft);font-variant-numeric:tabular-nums}
 .r0{--c:var(--error)!important}.r1{--c:var(--amber)!important}.r2{--c:var(--sea)!important}.r3{--c:var(--olive)!important}
 .type-row{display:flex;gap:.5rem}
-.type-row input{font-family:var(--serif);font-size:1.45rem!important;text-align:center}
+.type-row input{font-size:1.25rem!important;text-align:center}
+.type-row input.in-gr{font-family:var(--serif);font-size:1.45rem!important}
 .verdict{font-weight:600;margin:0}
-.verdict.ok{color:var(--ok)}.verdict.near{color:var(--amber)}.verdict.wrong{color:var(--error)}
+.verdict.ok{color:var(--ok)}.verdict.near{color:var(--amber)}.verdict.wrong,.verdict.accent{color:var(--error)}
+.check.strict{margin-top:.2rem}
 .yours{color:var(--ink-soft);margin:0;font-family:var(--serif);font-size:1.2rem}
 .yours.struck{text-decoration:line-through}
 
@@ -155,7 +157,6 @@ textarea{min-height:220px;resize:vertical;line-height:1.5}
   body.in-session .toast{bottom:calc(1.25rem + env(safe-area-inset-bottom,0px))}
 }
 @media (max-width:480px){
-  .seg.mode{grid-template-columns:repeat(2,1fr)}
   .rate b{font-size:.85rem}
   .row2{grid-template-columns:1fr}
 }
@@ -203,6 +204,9 @@ textarea{min-height:220px;resize:vertical;line-height:1.5}
         <label class="btn file">Загрузить файл<input type="file" id="importFile" class="sr-only" accept=".txt,.csv,.tsv,text/plain,text/csv"></label>
       </div>
       <p class="hint">Подойдут разделители «-», «—», «=», «;», табуляция или запятая. Порядок частей не важен: греческое слово приложение найдёт само. Строки, начинающиеся с #, пропускаются.</p>
+      <div class="field"><span>Готовые колоды</span>
+        <div class="actions" id="presetList" style="justify-content:flex-start"></div>
+      </div>
     </div>
     <div class="preview" id="importPreview"></div>
     <div class="actions"><button class="btn primary big" data-action="import" id="importBtn" disabled>Добавить</button></div>
@@ -261,7 +265,7 @@ function plural(n,f){const a=Math.abs(n)%100,b=a%10;if(a>10&&a<20)return f[2];if
 const pw=(n,f)=>n+' '+plural(n,f);
 
 /* ---------- state ---------- */
-function defaultState(){return{words:[],settings:{newPerDay:20,autoSpeak:true,theme:'auto',mode:'gr',deck:'__all'},stats:{days:{},newDate:'',newCount:0},updatedAt:0};}
+function defaultState(){return{words:[],settings:{newPerDay:20,autoSpeak:true,theme:'auto',mode:'gr',deck:'__all',strictAccents:false},stats:{days:{},newDate:'',newCount:0},updatedAt:0};}
 function newSrs(){return{state:'new',due:0,interval:0,ease:2.5,reps:0,lapses:0,step:0};}
 function fixWord(w){
   return{id:w.id||uid(),gr:String(w.gr||'').trim(),ru:String(w.ru||'').trim(),note:String(w.note||'').trim(),
@@ -438,8 +442,9 @@ function checkAnswer(input,gr){
   if(GR_RE.test(input)){
     const n=normGr(input);cands.forEach(c=>upd(test(n,c)));
     if(v==='ok'){
-      const raw=input.toLowerCase().replace(/ς/g,'σ').replace(/\s+/g,' ').trim();
-      const raws=variants(gr,p=>p.toLowerCase().replace(/ς/g,'σ').replace(/[.,!?;:«»"']/g,'').replace(/\s+/g,' ').trim());
+      const rawNorm=x=>x.normalize('NFC').toLowerCase().replace(/ς/g,'σ').replace(/[.,!?;:«»"'()]/g,' ').replace(/\s+/g,' ').trim();
+      const raw=rawNorm(input);
+      const raws=variants(gr,rawNorm);
       accent=!raws.includes(raw);
     }
   }else{
@@ -448,6 +453,21 @@ function checkAnswer(input,gr){
   }
   return{v,accent};
 }
+
+function ruVariants(ru){
+  const out=new Set();const add=x=>{const n=normGr(x);if(n)out.add(n);};
+  add(ru);
+  ru.split(/[,;\/]|\s[-—–]\s/).forEach(p=>{add(p);add(p.replace(/\([^)]*\)|\[[^\]]*\]/g,' '));});
+  return[...out];
+}
+function checkRu(input,ru){
+  const rank={wrong:0,near:1,ok:2};let v='wrong';
+  const tol=len=>len>=10?2:len>=4?1:0;
+  const n=normGr(input);
+  ruVariants(ru).forEach(c=>{const d=lev(n,c);const x=d===0?'ok':d<=tol(c.length)?'near':'wrong';if(rank[x]>rank[v])v=x;});
+  return{v,accent:false};
+}
+const CYR_RE=/[а-яё]/i;
 
 /* ---------- import parsing ---------- */
 function parseList(text){
@@ -509,10 +529,10 @@ function render(){
 }
 
 /* ---------- study home ---------- */
-const MODES=[['gr','С греческого','Видишь греческое слово и вспоминаешь перевод.'],
-  ['ru','С русского','Видишь перевод и вспоминаешь греческое слово.'],
-  ['type','Письменно','Видишь перевод и пишешь слово по-гречески. Можно латиницей и без ударений.'],
-  ['mix','Вперемешку','Направление выбирается случайно для каждой карточки.']];
+const MODES=[['gr','С греческого','Видишь греческое слово и пишешь перевод на русском.'],
+  ['ru','С русского','Видишь перевод и пишешь слово по-гречески. Можно латиницей и без ударений.'],
+  ['mix','Вперемешку','Направление выбирается случайно: иногда пишешь по-русски, иногда по-гречески.']];
+const modeOf=()=>MODES.some(m=>m[0]===state.settings.mode)?state.settings.mode:'gr';
 let session=null;
 
 function renderStudy(){
@@ -540,7 +560,10 @@ function renderStudy(){
     const next=nexts.length?Math.min(...nexts):0;
     headline='На сегодня всё повторено.'+(next?' Следующие слова вернутся '+fmtWhen(next)+'.':'')+(fresh&&!nl?' Лимит новых слов на сегодня исчерпан.':'');
   }
-  const mode=state.settings.mode;const modeInfo=MODES.find(m=>m[0]===mode)||MODES[0];
+  const mode=modeOf();const strict=!!state.settings.strictAccents;
+  const modeHint={gr:'Видишь греческое слово и пишешь перевод на русском.',
+    ru:strict?'Видишь перевод и пишешь слово по-гречески, обязательно с ударением.':'Видишь перевод и пишешь слово по-гречески. Можно латиницей и без ударений.',
+    mix:'Направление выбирается случайно: иногда пишешь по-русски, иногда по-гречески'+(strict?' с ударением.':'.')}[mode];
   const dk=decks();
   el.innerHTML=`<section>
     <h1 class="hero-gr" lang="el">Σήμερα</h1>
@@ -551,7 +574,8 @@ function renderStudy(){
     ${dk.length>1?`<label class="field"><span>Колода</span><select id="deckSel">${deckOptions(state.settings.deck)}</select></label>`:''}
     <div class="field"><span class="label" id="modeLbl">Режим</span>
       <div class="seg mode" role="group" aria-labelledby="modeLbl">${MODES.map(m=>`<button data-action="mode" data-v="${m[0]}" aria-pressed="${m[0]===mode}">${m[1]}</button>`).join('')}</div>
-      <p class="hint">${modeInfo[2]}</p>
+      <p class="hint">${modeHint}</p>
+      ${mode!=='gr'?`<label class="check strict"><input type="checkbox" id="strictSel"${strict?' checked':''}> Требовать ударения в греческих ответах</label>`:''}
     </div>
     <div class="actions">
       <button class="btn primary big" data-action="start"${due+nl?'':' disabled'}>Начать</button>
@@ -582,28 +606,32 @@ function next(){
   const id=session.queue.shift();
   if(!id){session.current=null;render();return;}
   const w=getWord(id);if(!w)return next();
-  const m=state.settings.mode;
+  const m=modeOf();
   session.current={id,dir:m==='mix'?(Math.random()<.5?'gr':'ru'):m};
   session.revealed=false;session.result=null;session.typed='';
   render();
   if(session.current.dir==='gr'&&state.settings.autoSpeak)speak(w.gr);
-  if(session.current.dir==='type'){const inp=$('#typeIn');if(inp)inp.focus();}
-}
-function reveal(){
-  if(!session||!session.current||session.revealed)return;
-  session.revealed=true;render();
-  const w=getWord(session.current.id);
-  if(session.current.dir==='ru'&&state.settings.autoSpeak)speak(w.gr);
+  const inp=$('#typeIn');if(inp)inp.focus();
 }
 function check(giveUp){
   if(!session||!session.current||session.revealed)return;
-  const w=getWord(session.current.id);
+  const w=getWord(session.current.id),dir=session.current.dir;
   const inp=$('#typeIn');const val=giveUp?'':(inp?inp.value:'');
-  if(!giveUp&&!val.trim()){if(inp)inp.focus();return;}
-  session.typed=val;session.result=giveUp?{v:'wrong',accent:false}:checkAnswer(val,w.gr);
+  if(!giveUp){
+    if(!val.trim()){if(inp)inp.focus();return;}
+    if(dir==='gr'&&GR_RE.test(val)&&!CYR_RE.test(val)){toast('Здесь нужен перевод на русском.');inp.focus();return;}
+    if(dir==='ru'&&CYR_RE.test(val)&&!GR_RE.test(val)){toast('Здесь нужно греческое слово. Можно латиницей.');inp.focus();return;}
+  }
+  session.typed=val;
+  const strict=dir==='ru'&&!!state.settings.strictAccents;
+  if(!giveUp&&strict&&!GR_RE.test(val)){toast('Ударения включены: пиши греческими буквами.');inp.focus();return;}
+  session.result=giveUp?{v:'wrong',accent:false}:dir==='gr'?checkRu(val,w.ru):checkAnswer(val,w.gr);
+  if(strict&&session.result.v==='ok'&&session.result.accent){
+    session.result={v:'accent',missing:!/[\u0301\u0308\u0344\u0385]/.test(val.normalize('NFD'))};
+  }
   session.revealed=true;render();
   haptic(session.result.v==='ok'?'success':session.result.v==='near'?'warning':'error');
-  if(state.settings.autoSpeak)speak(w.gr);
+  if(dir==='ru'&&state.settings.autoSpeak)speak(w.gr);
 }
 function rate(g){
   if(!session||!session.current||!session.revealed)return;
@@ -633,38 +661,34 @@ function renderSession(el){
   const grBlock=`<div class="word" lang="el">${esc(w.gr)}</div>${speakBtn(w.gr)}`;
   const ruBlock=`<div class="word-ru">${esc(w.ru)}</div>`;
   const noteBlock=w.note?`<p class="note">${esc(w.note)}</p>`:'';
-  const prompts={gr:'Что это значит?',ru:'Как это по-гречески?',type:'Напиши по-гречески'};
-  let face=dir==='gr'?grBlock:ruBlock,answer='',controls='';
+  const prompt=dir==='gr'?'Напиши по-русски':'Напиши по-гречески';
+  const face=dir==='gr'?grBlock:ruBlock;
+  let answer='',controls='';
   if(rev){
-    if(dir==='gr')answer=ruBlock+noteBlock;
-    else if(dir==='ru')answer=grBlock+noteBlock;
-    else{
-      const r=session.result;
-      const msg=r.v==='ok'?(r.accent?'Верно. Проверь ударение.':'Верно.'):r.v==='near'?'Почти. Сверь написание.':(session.typed?'Не совсем.':'Правильный ответ:');
-      answer=`<p class="verdict ${r.v}">${msg}</p>${session.typed&&r.v!=='ok'?`<p class="yours${r.v==='wrong'?' struck':''}" lang="el">${esc(session.typed)}</p>`:''}${grBlock}${noteBlock}`;
-    }
-  }
-  if(!rev&&dir!=='type'){
-    controls=`<button class="btn primary big" data-action="reveal">Показать ответ</button><p class="keys">Пробел, чтобы открыть</p>`;
-  }else if(!rev){
-    controls=`<div class="type-row"><label class="sr-only" for="typeIn">Ответ по-гречески</label>
-      <input id="typeIn" lang="el" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" enterkeyhint="done" placeholder="…">
+    const r=session.result;
+    const msg=r.v==='accent'?(r.missing?'Не хватает ударения. Правильно:':'Ударение стоит не там. Правильно:')
+      :r.v==='ok'?(r.accent?'Верно. Проверь ударение.':'Верно.')
+      :r.v==='near'?'Почти. Сверь написание.'
+      :(session.typed?'Не совсем. Правильный ответ:':'Правильный ответ:');
+    const yours=session.typed&&r.v!=='ok'?`<p class="yours${r.v==='wrong'?' struck':''}"${dir==='ru'?' lang="el"':''}>${esc(session.typed)}</p>`:'';
+    answer=`<p class="verdict ${r.v}">${msg}</p>${yours}${dir==='gr'?ruBlock:grBlock}${noteBlock}`;
+    const btns=r.v==='accent'?[['Дальше',0,true],['Засчитать',2]]
+      :r.v==='ok'?[['Дальше',2,true],['Это было легко',3]]
+      :r.v==='near'?[['Засчитать',2,true],['Не засчитывать',0]]
+      :session.typed?[['Дальше',0,true],['Мой ответ тоже верный',2]]:[['Дальше',0,true]];
+    controls=`<div class="actions">${btns.map(b=>`<button class="btn big${b[2]?' primary':''}" data-action="rate" data-g="${b[1]}">${b[0]}</button>`).join('')}</div><p class="keys">Enter, чтобы продолжить</p>`;
+  }else{
+    const isGr=dir==='ru';
+    controls=`<div class="type-row"><label class="sr-only" for="typeIn">${isGr?'Ответ по-гречески':'Перевод на русском'}</label>
+      <input id="typeIn" class="${isGr?'in-gr':'in-ru'}" lang="${isGr?'el':'ru'}" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" enterkeyhint="done" placeholder="${isGr?(state.settings.strictAccents?'по-гречески, с ударением':'по-гречески'):'по-русски'}">
       <button class="btn primary" data-action="check">Проверить</button></div>
       <button class="btn ghost" data-action="dunno">Не знаю</button>`;
-  }else if(dir!=='type'){
-    const labels=['Не помню','С трудом','Помню','Легко'];
-    controls=`<div class="rate">${labels.map((l,g)=>`<button class="r${g}" data-action="rate" data-g="${g}"><b>${l}</b>${session.practice?'':`<small>${fmtDur(schedule(w.srs,g,Date.now()).due-Date.now())}</small>`}</button>`).join('')}</div>
-      <p class="keys">Клавиши 1–4 или пробел для «Помню»</p>`;
-  }else{
-    const v=session.result.v;
-    const btns=v==='ok'?[['Дальше',2,true],['Это было легко',3]]:v==='near'?[['Засчитать',2,true],['Не засчитывать',0]]:[['Дальше',0,true],['Засчитать, это опечатка',2]];
-    controls=`<div class="actions">${btns.map(b=>`<button class="btn big${b[2]?' primary':''}" data-action="rate" data-g="${b[1]}">${b[0]}</button>`).join('')}</div><p class="keys">Enter, чтобы продолжить</p>`;
   }
   el.innerHTML=`<div class="session-top"><button class="link" data-action="end">Завершить</button>
       <div class="progress" role="progressbar" aria-valuenow="${pct}" aria-valuemin="0" aria-valuemax="100"><span style="width:${pct}%"></span></div>
       <span class="left" aria-label="Осталось карточек">${left}</span></div>
-    <div class="card${!rev&&dir!=='type'?' clickable':''}"${!rev&&dir!=='type'?' data-action="reveal"':''}>
-      <div class="prompt"><span>${prompts[dir]}</span>${session.practice?'<span class="practice">Тренировка</span>':''}</div>
+    <div class="card">
+      <div class="prompt"><span>${prompt}</span>${session.practice?'<span class="practice">Тренировка</span>':''}</div>
       ${face}${rev?`<div class="answer">${answer}</div>`:''}
     </div>
     <div class="controls">${controls}</div>`;
@@ -729,6 +753,23 @@ function updatePreview(){
   btn.disabled=!items.length;
   btn.textContent=items.length?'Добавить '+pw(items.length,['слово','слова','слов']):'Добавить';
 }
+const PRESETS=[{file:'decks/top100.txt',deck:'Топ-100',title:'Топ-100 частых слов'}];
+function renderPresets(){
+  $('#presetList').innerHTML=PRESETS.map((p,i)=>`<button class="btn" data-action="preset" data-i="${i}">${esc(p.title)}</button>`).join('');
+}
+async function loadPreset(el){
+  const p=PRESETS[+el.dataset.i];if(!p||el.disabled)return;
+  el.disabled=true;
+  try{
+    const r=await fetch(p.file,{cache:'no-cache'});
+    if(!r.ok)throw new Error(r.status);
+    $('#importText').value=await r.text();
+    $('#importDeck').value=p.deck;
+    updatePreview();
+    toast('Колода загружена. Проверь список и нажми «Добавить».');
+  }catch(e){toast('Не удалось загрузить колоду. Проверь интернет и попробуй ещё раз.');}
+  finally{el.disabled=false;}
+}
 function doImport(){
   if(!parsed.items.length)return;
   const deck=($('#importDeck').value||'').trim()||DEFAULT_DECK;
@@ -784,8 +825,7 @@ document.addEventListener('click',e=>{
     case'start':startSession(false);break;
     case'practice':startSession(true);break;
     case'mode':state.settings.mode=el.dataset.v;save();renderStudy();break;
-    case'reveal':reveal();break;
-    case'check':check(false);break;
+        case'check':check(false);break;
     case'dunno':check(true);break;
     case'rate':haptic('light');rate(+el.dataset.g);break;
     case'speak':e.stopPropagation();speak(el.dataset.text);break;
@@ -800,6 +840,7 @@ document.addEventListener('click',e=>{
     case'wreset':{const w=getWord(el.dataset.id);w.srs=newSrs();save();renderList();toast('Прогресс сброшен.');break;}
     case'wdel':state.words=state.words.filter(w=>w.id!==el.dataset.id);openId=null;save();renderWords();toast('Удалено.');break;
     case'import':doImport();break;
+    case'preset':loadPreset(el);break;
     case'theme':state.settings.theme=el.dataset.v;save();applyTheme();renderSettings();break;
     case'testvoice':speak('Καλημέρα! Τι κάνεις;');break;
     case'backup':$('#backupText').value=JSON.stringify({app:'lexeis',v:1,words:state.words,stats:state.stats,settings:state.settings});toast('Копия готова. Скопируй её.');break;
@@ -816,6 +857,7 @@ document.addEventListener('change',e=>{
   if(e.target.id==='deckSel'){state.settings.deck=e.target.value;save();renderStudy();}
   else if(e.target.id==='deckFilter'){openId=null;renderList();}
   else if(e.target.id==='setNew'){let n=parseInt(e.target.value,10);if(isNaN(n)||n<0)n=0;if(n>500)n=500;state.settings.newPerDay=n;e.target.value=n;save();}
+  else if(e.target.id==='strictSel'){state.settings.strictAccents=e.target.checked;save();renderStudy();}
   else if(e.target.id==='setSpeak'){state.settings.autoSpeak=e.target.checked;save();}
   else if(e.target.id==='importFile'){
     const f=e.target.files&&e.target.files[0];if(!f)return;
@@ -830,19 +872,14 @@ $('#importText').addEventListener('input',updatePreview);
 $('#q').addEventListener('input',()=>{openId=null;renderList();});
 document.addEventListener('keydown',e=>{
   if(tab!=='study'||!session||!session.current)return;
-  const t=e.target;const inField=t.matches('input,textarea,select');
+  const t=e.target;
   if(t.matches('button')&&(e.key==='Enter'||e.key===' '))return;
-  const dir=session.current.dir;
   if(!session.revealed){
-    if(dir==='type'){if(e.key==='Enter'&&t.id==='typeIn'){e.preventDefault();check(false);}return;}
-    if(inField)return;
-    if(e.key===' '||e.key==='Enter'){e.preventDefault();reveal();}
-  }else{
-    if(inField)return;
-    if(dir==='type'){if(e.key==='Enter'||e.key===' '){e.preventDefault();typePrimary();}return;}
-    if(['1','2','3','4'].includes(e.key)){e.preventDefault();rate(+e.key-1);}
-    else if(e.key===' '||e.key==='Enter'){e.preventDefault();rate(2);}
+    if(e.key==='Enter'&&t.id==='typeIn'){e.preventDefault();check(false);}
+    return;
   }
+  if(t.matches('input,textarea,select'))return;
+  if(e.key==='Enter'||e.key===' '){e.preventDefault();typePrimary();}
 });
 
 /* ---------- init ---------- */
@@ -855,6 +892,7 @@ if(inTG){
 }
 document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden'&&cloudTimer)pushCloud();});
 applyTheme();
+renderPresets();
 if(hasTTS){loadVoices();try{speechSynthesis.addEventListener('voiceschanged',loadVoices);}catch(e){speechSynthesis.onvoiceschanged=loadVoices;}}
 setTab('study');
 pullCloud();
